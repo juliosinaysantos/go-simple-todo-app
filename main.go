@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/juliosinaysantos/go-simple-todo-app/database"
+	"github.com/juliosinaysantos/go-simple-todo-app/routes"
 	"github.com/juliosinaysantos/go-simple-todo-app/utils"
 )
 
@@ -23,6 +24,10 @@ func main() {
 			"message": "Hello, world! 👋",
 		})
 	})
+
+	api := app.Group("api/")
+
+	routes.TodosRouter(api)
 
 	app.Use(func(c *fiber.Ctx) error {
 		url := c.Path()
