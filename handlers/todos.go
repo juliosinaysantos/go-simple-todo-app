@@ -51,9 +51,22 @@ func CreateTodoHandler(ctx *fiber.Ctx) error {
 }
 
 func GetTodoHandler(ctx *fiber.Ctx) error {
+	id, err := ctx.ParamsInt("id")
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Param id must be an unsigned integer")
+	}
+
+	if id <= 0 {
+		return fiber.NewError(fiber.StatusBadRequest, "Param id must be an unsigned integer")
+	}
+
+	t := database.GetSingleTodo(id)
+
+	if t == nil {
+		return fiber.NewError(fiber.StatusNotFound, "ToDo Not Found")
+	}
 	return ctx.JSON(fiber.Map{
-		"id":   ctx.Params("id"),
-		"todo": nil,
+		"todo": t,
 	})
 }
 

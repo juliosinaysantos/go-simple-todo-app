@@ -26,3 +26,12 @@ func CreateTodo(todo *models.Todo) uint {
 	mu.Unlock()
 	return todo.ID
 }
+
+func GetSingleTodo(id int) *models.Todo {
+	for _, t := range db.todos {
+		if t.ID == uint(id) {
+			return t
+		}
+	}
+	return nil
+}
