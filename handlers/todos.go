@@ -1,8 +1,13 @@
 package handlers
 
 import (
+	// "encoding/json"
+
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/juliosinaysantos/go-simple-todo-app/database"
+	"github.com/juliosinaysantos/go-simple-todo-app/models"
 )
 
 func GetTodosHandler(ctx *fiber.Ctx) error {
@@ -13,8 +18,35 @@ func GetTodosHandler(ctx *fiber.Ctx) error {
 }
 
 func CreateTodoHandler(ctx *fiber.Ctx) error {
+	todo := new(models.Todo)
+
+	if err := ctx.BodyParser(todo); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Bad Request",
+			"stack":   err.Error(),
+		})
+	}
+
+	if todo.Title == "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Title is required",
+		})
+	}
+
+	todo.ID = uint(database.CountTodos() + 1)
+	todo.Completed = false
+	todo.CreatedAt = time.Now().UTC()
+	todo.UpdatedAt = time.Now().UTC()
+
+	id := database.CreateTodo(todo)
+
+	if id <= 0 {
+		return fiber.NewError(fiber.StatusInternalServerError, "Internal Server Error")
+	}
+
 	return ctx.JSON(fiber.Map{
-		"message": "New ToDo",
+		"todo":    id,
+		"message": "ToDo created successfully!",
 	})
 }
 

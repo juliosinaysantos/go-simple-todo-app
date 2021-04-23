@@ -5,7 +5,7 @@ import "time"
 type Todo struct {
 	ID        uint       `json:"id"`
 	Title     string     `json:"title"`
-	Content   string     `json:"content"`
+	Content   string     `json:"content,omitempty"`
 	Completed bool       `json:"completed"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`

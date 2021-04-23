@@ -8,7 +8,7 @@ import (
 )
 
 type DB struct {
-	todos []models.Todo
+	todos []*models.Todo
 }
 
 var (
@@ -18,7 +18,7 @@ var (
 
 func Connect() {
 	db = &DB{
-		todos: make([]models.Todo, 0),
+		todos: make([]*models.Todo, 0),
 	}
 	fmt.Println("Connected with Database")
 }

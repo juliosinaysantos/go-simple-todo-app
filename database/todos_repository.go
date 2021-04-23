@@ -4,8 +4,8 @@ import (
 	"github.com/juliosinaysantos/go-simple-todo-app/models"
 )
 
-func GetAllTodos() []models.Todo {
-	todos := make([]models.Todo, 0)
+func GetAllTodos() []*models.Todo {
+	todos := make([]*models.Todo, 0)
 
 	for _, todo := range db.todos {
 		if todo.DeletedAt == nil {
@@ -14,4 +14,15 @@ func GetAllTodos() []models.Todo {
 	}
 
 	return todos
+}
+
+func CountTodos() int {
+	return len(db.todos)
+}
+
+func CreateTodo(todo *models.Todo) uint {
+	mu.Lock()
+	db.todos = append(db.todos, todo)
+	mu.Unlock()
+	return todo.ID
 }
