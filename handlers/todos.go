@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	// "encoding/json"
-
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -71,9 +69,44 @@ func GetTodoHandler(ctx *fiber.Ctx) error {
 }
 
 func UpdateTodoHandler(ctx *fiber.Ctx) error {
+	id, err := ctx.ParamsInt("id")
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Param id must be an unsigned integer")
+	}
+
+	if id <= 0 {
+		return fiber.NewError(fiber.StatusBadRequest, "Param id must be an unsigned integer")
+	}
+
+	t := database.GetSingleTodo(id)
+
+	if t == nil {
+		return fiber.NewError(fiber.StatusNotFound, "ToDo Not Found")
+	}
+
+	todo := new(models.Todo)
+
+	if err := ctx.BodyParser(todo); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Bad Request",
+			"stack":   err.Error(),
+		})
+	}
+
+	if todo.Title == "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Title is required",
+		})
+	}
+
+	t.Title = todo.Title
+	t.Content = todo.Content
+	t.Completed = todo.Completed
+	t.UpdatedAt = time.Now().UTC()
+
 	return ctx.JSON(fiber.Map{
-		"id":   ctx.Params("id"),
-		"todo": nil,
+		"id":      t.ID,
+		"message": "ToDo updated successfully!",
 	})
 }
 
