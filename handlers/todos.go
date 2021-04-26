@@ -49,14 +49,7 @@ func CreateTodoHandler(ctx *fiber.Ctx) error {
 }
 
 func GetTodoHandler(ctx *fiber.Ctx) error {
-	id, err := ctx.ParamsInt("id")
-	if err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Param id must be an unsigned integer")
-	}
-
-	if id <= 0 {
-		return fiber.NewError(fiber.StatusBadRequest, "Param id must be an unsigned integer")
-	}
+	id := ctx.Locals("id").(int)
 
 	t := database.GetSingleTodo(id)
 
@@ -69,14 +62,7 @@ func GetTodoHandler(ctx *fiber.Ctx) error {
 }
 
 func UpdateTodoHandler(ctx *fiber.Ctx) error {
-	id, err := ctx.ParamsInt("id")
-	if err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Param id must be an unsigned integer")
-	}
-
-	if id <= 0 {
-		return fiber.NewError(fiber.StatusBadRequest, "Param id must be an unsigned integer")
-	}
+	id := ctx.Locals("id").(int)
 
 	t := database.GetSingleTodo(id)
 
@@ -111,14 +97,7 @@ func UpdateTodoHandler(ctx *fiber.Ctx) error {
 }
 
 func DeleteTodoHandler(ctx *fiber.Ctx) error {
-	id, err := ctx.ParamsInt("id")
-	if err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Param id must be an unsigned integer")
-	}
-
-	if id <= 0 {
-		return fiber.NewError(fiber.StatusBadRequest, "Param id must be an unsigned integer")
-	}
+	id := ctx.Locals("id").(int)
 
 	t := database.GetSingleTodo(id)
 
